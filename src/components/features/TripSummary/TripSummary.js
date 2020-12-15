@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import styles from './TripSummary.scss';
 import {Col} from 'react-flexbox-grid';
+import {promoPrice} from '../../../utils/promoPrice';
+import settings from '../../../data/settings';
+import {formatPrice} from '../../../utils/formatPrice';
+import {currencyStringToFloat} from '../../../utils/currencyStringToFloat';
 
 const TripSummary = ({id, image, name, cost, days, tags}) => (
   <Col xs={12} sm={6} lg={4} className={styles.column}>
@@ -12,13 +16,15 @@ const TripSummary = ({id, image, name, cost, days, tags}) => (
         <h3 className={styles.title}>{name}</h3>
         <div className={styles.details}>
           <span>{days} days</span>
-          <span>from {cost}</span>
+          <span>from {formatPrice(promoPrice(currencyStringToFloat(cost), settings.happyHourDiscount))}</span>
         </div>
-        <div className={styles.tags}>
-          {tags.map(tag => (
-            <span className={styles.tag} key={tag.toString()}>{tag}</span>
-          ))}
-        </div>
+        {(typeof tags !== 'undefined' && tags.length > 0) ? (
+          <div className={styles.tags}>
+            {tags.map(tag => (
+              <span className={styles.tag} key={tag.toString()}>{tag}</span>
+            ))}
+          </div>
+        ) : ''}
       </article>
     </Link>
   </Col>

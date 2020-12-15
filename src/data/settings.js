@@ -5,6 +5,7 @@ const settings = {
       orders: 'orders',
     },
   },
+  happyHourDiscount: 20,
 };
-  
+
 export default settings;

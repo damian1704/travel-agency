@@ -11,8 +11,14 @@ import DetailsImage from '../../common/DetailsImage/DetailsImage';
 import List from '../../common/List/List';
 import ListItem from '../../common/ListItem/ListItem';
 import OrderForm from '../../features/OrderForm/OrderFormContainer';
+
 import styles from './Trip.scss';
 import {Grid, Row, Col} from 'react-flexbox-grid';
+import {promoPrice} from '../../../utils/promoPrice';
+import settings from '../../../data/settings';
+import {formatPrice} from '../../../utils/formatPrice';
+import {currencyStringToFloat} from '../../../utils/currencyStringToFloat';
+
 
 const Trip = ({error, name, image, cost, days, description, country, intro, id}) => {
   if(error) return <NotFound />;
@@ -33,12 +39,20 @@ const Trip = ({error, name, image, cost, days, description, country, intro, id})
               </div>
               <List variant='light'>
                 <ListItem title={`<strong>Duration:</strong> ${days} days`} icon='calendar-alt' />
-                <ListItem title={`<strong>Price:</strong> from ${cost}`} icon='money-bill-wave' />
+                <ListItem title={`<strong>Price:</strong> from ${formatPrice(promoPrice(currencyStringToFloat(cost), settings.happyHourDiscount))}`} icon='money-bill-wave' />
               </List>
             </Col>
           </Row>
         </Grid>
       </DetailsBox>
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            <PageTitle text='Trip options' />
+            <OrderForm tripCost={cost} tripName={name} tripId={id} countryCode={country.alpha3Code}/>
+          </Col>
+        </Row>
+      </Grid>
       <Grid>
         <Row>
           <Col xs={12}>
@@ -66,11 +80,6 @@ const Trip = ({error, name, image, cost, days, description, country, intro, id})
           </Row>
         </Grid>
       </DetailsBox>
-      <OrderForm
-        tripCost={cost}
-        tripId = {id}
-        tripCountryCode = {country.alpha3Code}
-      />
     </Section>
   );
 };
@@ -82,6 +91,7 @@ Trip.propTypes = {
   days: PropTypes.number,
   description: PropTypes.string,
   country: PropTypes.object,
+  id: PropTypes.any,
 };
 
 export default Trip;
